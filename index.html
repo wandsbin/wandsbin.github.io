@@ -1,224 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>HTML Editor</title>
-
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>倒地的树</title>
     <style>
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        color: #333;
-        background-color: #f5f5f5;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-      header {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 60px;
-        background-color: #007bff;
-        color: #fff;
-        font-size: 24px;
-        font-weight: bold;
-      }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 999;
+        }
 
-      #editor {
-        width: 100%;
-        height: calc(100vh - 240px);
-        border: none;
-        outline: none;
-        padding: 20px;
-        box-sizing: border-box;
-      }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+        }
 
-      #buttons {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: fixed;
-        bottom: 25px;
-        right: 25px;
-        left: auto;
-        width: 50%;
-        height: 80px;
-        padding: 0 20px;
-        background-color: #e6e6e6;
-      }
+        .menu {
+            float: right;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
 
-      button {
-        font-size: 16px;
-        background-color: transparent;
-        color: #007bff;
-        border: solid 1px #007bff;
-        cursor: pointer;
-        padding: 10px 25px;
-        border-radius: 5px;
-      }
+        .menu li {
+            display: inline-block;
+            margin-left: 10px;
+        }
 
-      button:hover,
-      button:focus {
-        background-color: #007bff;
-        color: #fff;
-        border: solid 1px transparent;
-      }
+        .menu li a {
+            color: #fff;
+            text-decoration: none;
+        }
 
-      input[type='file'] {
-        display: none;
-      }
+        .menu li a:hover {
+            text-decoration: underline;
+        }
 
-      .dialog-wrapper {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-        visibility: hidden;
-      }
+        .content {
+            padding-top: 80px;
+            margin: 20px;
+        }
 
-      .dialog {
-        background-color: #fff;
-        border-radius: 5px;
-        padding: 20px;
-        box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
-        display: flex;
-        flex-direction: column;
-      }
+        .post {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
 
-      .dialog label {
-        margin-bottom: 10px;
-      }
+        .post h2 {
+            margin: 0;
+        }
 
-      .dialog input[type='text'] {
-        padding: 5px;
-        border-radius: 3px;
-        border: solid 1px #ccc;
-        margin-bottom: 10px;
-        outline: none;
-      }
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
 
-      .dialog button {
-        margin-top: 10px;
-        align-self: flex-end;
-        margin-left: 10px;
-        padding: 5px 15px;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-      }
+        /* 动画效果 */
+        @keyframes blueBackground {
+            0% {
+                background-color: #0052cc;
+            }
+            50% {
+                background-color: #007bff;
+            }
+            100% {
+                background-color: #0052cc;
+            }
+        }
 
-      .dialog button.primary {
-        background-color: #007bff;
-        color: #fff;
-      }
+        .animated-header {
+            animation: blueBackground 2s linear infinite;
+        }
 
-      .dialog button.cancel {
-        background-color: #f5f5f5;
-        color: #333;
-      }
+        /* 下载页面样式 */
+        .download-form {
+            margin-top: 20px;
+        }
 
-      .dialog button:hover,
-      .dialog button:focus {
-        opacity: 0.8;
-      }
+        .download-form input[type="text"],
+        .download-form input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .download-form textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .download-form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
     </style>
+</head>
+<body>
+    <header class="animated-header">
+        <div class="logo">个人博客</div>
+        <ul class="menu">
+            <li><a href="index.html">首页</a></li>
+            <li><a href="download.html">资源下载</a></li>
+        </ul>
+    </header>
 
-    <script>
-      function executeCode() {
-        const editor = document.getElementById('editor');
-        try {
-          eval(editor.innerText);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-
-      function exportHTML() {
-        // 显示文件名输入框
-        document.querySelector('.dialog-wrapper').style.visibility = 'visible';
-        // 禁止页面滚动
-        document.body.style.overflow = 'hidden';
-      }
-
-      function loadFile() {
-        const input = document.getElementById('import');
-        const file = input.files[0];
-        const reader = new FileReader();
-        reader.onload = function () {
-          const content = this.result;
-          const editor = document.getElementById('editor');
-          editor.innerText = content;
-        };
-        if (file) {
-          reader.readAsText(file);
-        }
-      }
-
-      function saveFile() {
-        const editor = document.getElementById('editor');
-        const html = editor.innerText;
-        const filename =
-          document.querySelector('.dialog input[type="text"]').value ||
-          'index.html';
-        const filetype = 'text/html;charset=utf-8';
-
-        const element = document.createElement('a');
-        element.setAttribute('href', 'data:' + filetype + ',' + encodeURIComponent(html));
-        element.setAttribute('download', filename);
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-
-        // 隐藏文件名输入框
-        document.querySelector('.dialog-wrapper').style.visibility = 'hidden';
-        // 允许页面滚动
-        document.body.style.overflow = '';
-      }
-
-      function closeDialog() {
-        // 隐藏文件名输入框
-        document.querySelector('.dialog-wrapper').style.visibility = 'hidden';
-        // 允许页面滚动
-        document.body.style.overflow = '';
-      }
-
-      function clearEditor() {
-        const editor = document.getElementById('editor');
-        editor.innerText = '';
-      }
-    </script>
-  </head>
-  <body>
-    <header>HTML Editor</header>
-    <div id="editor" contenteditable="true"></div>
-    <div id="buttons">
-      <label for="import">
-        <button>导入文件</button>
-      </label>
-      <input type="file" id="import" accept=".html, .htm" style="display:none;" onchange="loadFile()">
-      <button onclick="exportHTML()">导出文件</button>
-      <button onclick="executeCode()">运行代码</button>
-      <button onclick="clearEditor()">一键删除</button>
-    </div>
-
-    <!-- 文件名输入框对话框 -->
-    <div class="dialog-wrapper">
-      <div class="dialog">
-        <label for="filename">请输文件名：</label>
-        <input type="text" id="filename" name="filename" />
-        <div>
-          <button class="primary" onclick="saveFile()">保存</button>
-          <button class="cancel" onclick="closeDialog()">取消</button>
+    <div class="content">
+        <div class="post">
+            <h2>文章标题</h2>
+            <p>文章内容</p>
+            <div class="edit">
+                <a href="#" onclick="showDeleteConfirmation()">删除</a>
+            </div>
         </div>
-      </div>
+
+        <!-- 其他文章 -->
+
+        <script>
+            function showDeleteConfirmation() {
+                var password = prompt("请输入密码");
+                if (password === "admin") {
+                    var confirmDelete = confirm("确认删除该文章吗？");
+                    if (confirmDelete) {
+                        // 执行删除逻辑
+                    }
+                } else {
+                    alert("密码错误");
+                }
+            }
+        </script>
     </div>
-  </body>
+
+    <footer>
+        版权所有 &copy; 2021 个人博客
+    </footer>
+</body>
 </html>
