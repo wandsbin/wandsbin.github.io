@@ -53,6 +53,15 @@
         <h1>个人博客</h1>
     </div>
 
+    <div id="content">
+        <!-- 博客内容将会在这里动态加载 -->
+    </div>
+
+    <div class="search-form">
+        <input type="text" id="search-input" placeholder="输入搜索关键词">
+        <button type="button" onclick="search()">搜索</button>
+    </div>
+
     <script>
         function search() {
             var searchInput = document.getElementById('search-input');
@@ -119,8 +128,7 @@
             xhr.send();
         }
 
-    <div id="content">
-        <!-- 博客内容将会在这里动态加载 -->
-    </div>
+        loadBlogContent();
+    </script>
 </body>
 </html>
