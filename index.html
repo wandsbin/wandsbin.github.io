@@ -1,134 +1,191 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>个人博客</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
-
-        #header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        #header img {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-            border-radius: 50%;
-        }
-
-        #content {
-            line-height: 1.5;
-        }
-
-        .blog-entry {
-            margin-bottom: 30px;
-        }
-
-        .blog-entry img {
-            max-width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .search-form {
-            margin-bottom: 20px;
-        }
-
-        .search-form input[type="text"] {
-            width: 300px;
-            padding: 5px;
-            font-size: 16px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>个人博客</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 20px;
+}
+#header {
+display: flex;
+align-items: center;
+margin-bottom: 20px;
+}
+#header img {
+width: 50px;
+height: 50px;
+margin-right: 10px;
+border-radius: 50%;
+}
+#content {
+line-height: 1.5;
+}
+.blog-entry {
+margin-bottom: 30px;
+border-bottom: 1px solid #ccc;
+}
+.blog-entry:last-child {
+border-bottom: none;
+}
+.blog-entry img {
+max-width: 100%;
+margin-bottom: 10px;
+}
+.search-form {
+margin-bottom: 20px;
+position: sticky;
+top: 0;
+background-color: #fff;
+z-index: 1;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+padding: 10px;
+display: flex;
+align-items: center;
+}
+.search-form input[type="text"] {
+width: 300px;
+padding: 5px;
+font-size: 16px;
+border: none;
+border-radius: 5px 0 0 5px;
+outline: none;
+}
+.search-form button {
+padding: 5px 10px;
+border: none;
+background-color: #f2f2f2;
+border-radius: 0 5px 5px 0;
+cursor: pointer;
+}
+.blog-entry .content {
+max-height: 300px;
+overflow: hidden;
+transition: max-height 0.3s ease;
+}
+.blog-entry .expand-btn {
+background-color: #f2f2f2;
+padding: 5px 10px;
+cursor: pointer;
+}
+.blog-entry.expanded .content {
+max-height: none;
+}
+.blog-entry.expanded .expand-btn {
+display: none;
+}
+</style>
 </head>
 <body>
-    <div id="header">
-        <img src="face.png" alt="头像">
-        <h1>个人博客</h1>
-    </div>
-
-    <div id="content">
-        <!-- 博客内容将会在这里动态加载 -->
-    </div>
-
-    <div class="search-form">
-        <input type="text" id="search-input" placeholder="输入搜索关键词">
-        <button type="button" onclick="search()">搜索</button>
-    </div>
-
-    <script>
-        function search() {
-            var searchInput = document.getElementById('search-input');
-            var keyword = searchInput.value.trim().toLowerCase();
-
-            var blogEntries = document.getElementsByClassName('blog-entry');
-
-            for (var i = 0; i < blogEntries.length; i++) {
-                var entry = blogEntries[i];
-                var content = entry.textContent.toLowerCase();
-
-                if (content.indexOf(keyword) !== -1) {
-                    entry.style.display = 'block';
-                } else {
-                    entry.style.display = 'none';
-                }
-            }
-        }
-
-        function loadBlogContent() {
-            var xhr = new XMLHttpRequest();
-
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var contentDiv = document.getElementById('content');
-                    var entries = xhr.responseText.split('\n\n');
-
-                    for (var i = 0; i < entries.length; i++) {
-                        var entry = entries[i].trim();
-
-                        if (entry !== '') {
-                            var div = document.createElement('div');
-                            div.classList.add('blog-entry');
-
-                            var paragraphs = entry.split('\n');
-                            for (var j = 0; j < paragraphs.length; j++) {
-                                var paragraph = paragraphs[j].trim();
-
-                                if (paragraph.startsWith('[64]a=')) {
-                                    var img = document.createElement('img');
-                                    var imgData = paragraph.substring(7);
-                                    img.src = 'data:image/png;base64,' + imgData;
-                                    div.appendChild(img);
-                                } else if (paragraph.startsWith('<c>') && paragraph.endsWith('</c>')) {
-                                    var link = document.createElement('a');
-                                    var linkData = paragraph.substring(3, paragraph.length - 4);
-                                    link.href = linkData;
-                                    link.textContent = linkData;
-                                    div.appendChild(link);
-                                } else {
-                                    var p = document.createElement('p');
-                                    p.textContent = paragraph;
-                                    div.appendChild(p);
-                                }
-                            }
-
-                            contentDiv.appendChild(div);
-                        }
-                    }
-                }
-            };
-
-            xhr.open('GET', 'tz.txt', true);
-            xhr.send();
-        }
-
-        loadBlogContent();
-    </script>
-</body>
-</html>
+<div id="header">
+<img src="face.png" alt="头像">
+<h1>个人博客</h1>
+</div>
+<div class="search-form">
+<input type="text" id="search-input" placeholder="输入搜索关键词">
+<button type="button" onclick="search()">搜索</button>
+</div>
+<div id="content">
+<!-- 博客内容将会在这里动态加载 -->
+</div>
+<script>
+function search() {
+var searchInput = document.getElementById('search-input');
+var keyword = searchInput.value.trim().toLowerCase();
+var blogEntries = document.getElementsByClassName('blog-entry');
+for (var i = 0; i < blogEntries.length; i++) {
+var entry = blogEntries[i];
+var content = entry.textContent.toLowerCase();
+if (content.indexOf(keyword) !== -1) {
+entry.style.display = 'block';
+} else {
+entry.style.display = 'none';
+}
+}
+}
+function toggleContent(event) {
+var entry = event.target.closest('.blog-entry');
+entry.classList.toggle('expanded');
+}
+function loadBlogContent() {
+var xhr = new XMLHttpRequest();
+xhr.onload = function() {
+if (xhr.status === 200) {
+var contentDiv = document.getElementById('content');
+var entries = xhr.responseText.split('\n\n');
+for (var i = 0; i < entries.length; i++) {
+var entry = entries[i].trim();
+if (entry !== '') {
+var div = document.createElement('div');
+div.classList.add('blog-entry');
+var paragraphs = entry.split('\n');
+var title = document.createElement('h2');
+title.textContent = paragraphs[0].substring(7);
+div.appendChild(title);
+var contentDiv = document.createElement('div');
+contentDiv.classList.add('content');
+for (var j = 1; j < paragraphs.length; j++) {
+var paragraph = paragraphs[j].trim();
+if (paragraph.startsWith('[64]a=')) {
+var img = document.createElement('img');
+var imgData = paragraph.substring(7);
+img.src = 'data:image/png;base64,' + imgData;
+contentDiv.appendChild(img);
+} else if (paragraph.startsWith('<c>') && paragraph.endsWith('</c>')) {
+var link = document.createElement('a');
+var linkData = paragraph.substring(3, paragraph.length - 4);
+link.href = linkData;
+link.textContent = linkData;
+contentDiv.appendChild(link);
+} else {
+var p = document.createElement('p');
+p.textContent = paragraph;
+contentDiv.appendChild(p);
+}
+}
+div.appendChild(contentDiv);
+var expandBtn = document.createElement('div');
+expandBtn.classList.add('expand-btn');
+expandBtn.textContent = '展开';
+expandBtn.addEventListener('click', toggleContent);
+div.appendChild(expandBtn);
+contentDiv.addEventListener('transitionend', function(event) {
+var expandedDiv = event.target.closest('.blog-entry.expanded');
+if (expandedDiv) {
+var btn = expandedDiv.querySelector('.expand-btn');
+btn.textContent = '收起';
+} else {
+var btn = event.target.nextElementSibling;
+btn.textContent = '展开';
+}
+});
+contentDiv.addEventListener('click', function(event) {
+event.stopPropagation();
+});
+div.addEventListener('click', toggleContent);
+contentDiv.style.maxHeight = '300px';
+contentDiv.addEventListener('mouseenter', function(event) {
+var div = event.target;
+div.style.maxHeight = div.scrollHeight + 'px';
+});
+contentDiv.addEventListener('mouseleave', function(event) {
+var div = event.target;
+div.style.maxHeight = '300px';
+});
+contentDiv.addEventListener('touchstart', function(event) {
+var div = event.target;
+div.style.maxHeight = div.scrollHeight + 'px';
+});
+contentDiv.addEventListener('touchend', function(event) {
+var div = event.target;
+div.style.maxHeight = '300px';
+});
+contentDiv.addEventListener('touchcancel', function(event) {
+var div = event.target;
+div.style.maxHeight = '300px';
+});
+contentDiv.addEventListener('touchmove', function(event) {
+var div = event.target;
+div.style.maxHeight = div.scrollHeight + 'px';
