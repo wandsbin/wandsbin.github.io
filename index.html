@@ -53,6 +53,72 @@
         <h1>个人博客</h1>
     </div>
 
+    <script>
+        function search() {
+            var searchInput = document.getElementById('search-input');
+            var keyword = searchInput.value.trim().toLowerCase();
+
+            var blogEntries = document.getElementsByClassName('blog-entry');
+
+            for (var i = 0; i < blogEntries.length; i++) {
+                var entry = blogEntries[i];
+                var content = entry.textContent.toLowerCase();
+
+                if (content.indexOf(keyword) !== -1) {
+                    entry.style.display = 'block';
+                } else {
+                    entry.style.display = 'none';
+                }
+            }
+        }
+
+        function loadBlogContent() {
+            var xhr = new XMLHttpRequest();
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var contentDiv = document.getElementById('content');
+                    var entries = xhr.responseText.split('\n\n');
+
+                    for (var i = 0; i < entries.length; i++) {
+                        var entry = entries[i].trim();
+
+                        if (entry !== '') {
+                            var div = document.createElement('div');
+                            div.classList.add('blog-entry');
+
+                            var paragraphs = entry.split('\n');
+                            for (var j = 0; j < paragraphs.length; j++) {
+                                var paragraph = paragraphs[j].trim();
+
+                                if (paragraph.startsWith('[64]a=')) {
+                                    var img = document.createElement('img');
+                                    var imgData = paragraph.substring(7);
+                                    img.src = 'data:image/png;base64,' + imgData;
+                                    div.appendChild(img);
+                                } else if (paragraph.startsWith('<c>') && paragraph.endsWith('</c>')) {
+                                    var link = document.createElement('a');
+                                    var linkData = paragraph.substring(3, paragraph.length - 4);
+                                    link.href = linkData;
+                                    link.textContent = linkData;
+                                    div.appendChild(link);
+                                } else {
+                                    var p = document.createElement('p');
+                                    p.textContent = paragraph;
+                                    div.appendChild(p);
+                                }
+                            }
+
+                            contentDiv.appendChild(div);
+                        }
+                    }
+                }
+            };
+
+            xhr.open('GET', 'tz.txt', true);
+            xhr.send();
+        }
+
     <div id="content">
         <!-- 博客内容将会在这里动态加载 -->
     </div>
