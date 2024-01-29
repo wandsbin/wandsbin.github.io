@@ -2,133 +2,33 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>个人博客</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
-
-        #header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        #header img {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-            border-radius: 50%;
-        }
-
-        #content {
-            line-height: 1.5;
-        }
-
-        .blog-entry {
-            margin-bottom: 30px;
-        }
-
-        .blog-entry img {
-            max-width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .search-form {
-            margin-bottom: 20px;
-        }
-
-        .search-form input[type="text"] {
-            width: 300px;
-            padding: 5px;
-            font-size: 16px;
-        }
-    </style>
+    <title>我的博客</title>
 </head>
 <body>
-    <div id="header">
-        <img src="face.png" alt="头像">
-        <h1>个人博客</h1>
-    </div>
-
-    <div id="content">
-        <!-- 博客内容将会在这里动态加载 -->
-    </div>
-
-    <div class="search-form">
-        <input type="text" id="search-input" placeholder="输入搜索关键词">
-        <button type="button" onclick="search()">搜索</button>
+    <header>
+        <div>
+            <img src="f.png" alt="My Avatar" width="100">
+        </div>
+        <div>
+            <input type="text" placeholder="Search">
+        </div>
+    </header>
+    <div>
+        <h1>欢迎来到一株倒地的树的博客!</h1>
+        <div id="content"></div>
     </div>
 
     <script>
-        function search() {
-            var searchInput = document.getElementById('search-input');
-            var keyword = searchInput.value.trim().toLowerCase();
-
-            var blogEntries = document.getElementsByClassName('blog-entry');
-
-            for (var i = 0; i < blogEntries.length; i++) {
-                var entry = blogEntries[i];
-                var content = entry.textContent.toLowerCase();
-
-                if (content.indexOf(keyword) !== -1) {
-                    entry.style.display = 'block';
-                } else {
-                    entry.style.display = 'none';
-                }
-            }
+        window.onload = function() {
+            fetch('p.md')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('content').innerHTML = data;
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
         }
-
-        function loadBlogContent() {
-            var xhr = new XMLHttpRequest();
-
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var contentDiv = document.getElementById('content');
-                    var entries = xhr.responseText.split('\n\n');
-
-                    for (var i = 0; i < entries.length; i++) {
-                        var entry = entries[i].trim();
-
-                        if (entry !== '') {
-                            var div = document.createElement('div');
-                            div.classList.add('blog-entry');
-
-                            var paragraphs = entry.split('\n');
-                            for (var j = 0; j < paragraphs.length; j++) {
-                                var paragraph = paragraphs[j].trim();
-
-                                if (paragraph.startsWith('[64]a=')) {
-                                    var img = document.createElement('img');
-                                    var imgData = paragraph.substring(7);
-                                    img.src = 'data:image/png;base64,' + imgData;
-                                    div.appendChild(img);
-                                } else if (paragraph.startsWith('<c>') && paragraph.endsWith('</c>')) {
-                                    var link = document.createElement('a');
-                                    var linkData = paragraph.substring(3, paragraph.length - 4);
-                                    link.href = linkData;
-                                    link.textContent = linkData;
-                                    div.appendChild(link);
-                                } else {
-                                    var p = document.createElement('p');
-                                    p.textContent = paragraph;
-                                    div.appendChild(p);
-                                }
-                            }
-
-                            contentDiv.appendChild(div);
-                        }
-                    }
-                }
-            };
-
-            xhr.open('GET', 'tz.txt', true);
-            xhr.send();
-        }
-
-        loadBlogContent();
     </script>
 </body>
 </html>
