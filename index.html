@@ -3,6 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>我的博客</title>
+    <style>
+        /* 添加一些基本的样式以美化显示 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 0;
+        }
+        img {
+            max-width: 100%;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -10,7 +23,7 @@
             <img src="f.png" alt="My Avatar" width="100">
         </div>
         <div>
-            <input type="text" placeholder="Search">
+            <input type="text" placeholder="搜索🔍">
         </div>
     </header>
     <div>
@@ -18,12 +31,14 @@
         <div id="content"></div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         window.onload = function() {
             fetch('p.md')
                 .then(response => response.text())
                 .then(data => {
-                    document.getElementById('content').innerHTML = data;
+                    const html = marked(data);
+                    document.getElementById('content').innerHTML = html;
                 })
                 .catch(error => {
                     console.log('Error:', error);
