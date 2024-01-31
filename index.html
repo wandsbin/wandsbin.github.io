@@ -95,5 +95,33 @@
     </div>
     <div class="categories">
       <ul class="cat">
-      不知道写什么
+fetch('./p.md')  
+    .then(response => response.text())  
+    .then(data => {  
+        const content = document.getElementById('content');  
+        content.innerHTML = marked(data);  
+    })  
+    .catch(error => {  
+        console.error('Error:', error);  
+    });
+<html>  
+<head>  
+    <title>Markdown Viewer</title>  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">  
+</head>  
+<body>  
+    <div id="content"></div>  
+    <script>  
+        fetch('./p.md')  
+            .then(response => response.text())  
+            .then(data => {  
+                const content = document.getElementById('content');  
+                content.innerHTML = marked(data);  
+            })  
+            .catch(error => {  
+                console.error('Error:', error);  
+            });  
+    </script>  
+</body>  
+</html>
   
