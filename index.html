@@ -87,7 +87,7 @@
   </div>
 </div>
 <!-- Portfolio Section -->
-<div id=“不知道写什么">
+<div id=“p.md">
   <div class="container">
     <div class="section-title text-center center">
       <h2>文档</h2>
@@ -95,33 +95,3 @@
     </div>
     <div class="categories">
       <ul class="cat">
-fetch('./p.md')  
-    .then(response => response.text())  
-    .then(data => {  
-        const content = document.getElementById('content');  
-        content.innerHTML = marked(data);  
-    })  
-    .catch(error => {  
-        console.error('Error:', error);  
-    });
-<html>  
-<head>  
-    <title>Markdown Viewer</title>  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">  
-</head>  
-<body>  
-    <div id="content"></div>  
-    <script>  
-        fetch('./p.md')  
-            .then(response => response.text())  
-            .then(data => {  
-                const content = document.getElementById('content');  
-                content.innerHTML = marked(data);  
-            })  
-            .catch(error => {  
-                console.error('Error:', error);  
-            });  
-    </script>  
-</body>  
-</html>
-  
