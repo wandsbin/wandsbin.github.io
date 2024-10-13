@@ -1,1 +1,65 @@
-1
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奇怪软件公司</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  .left-side {
+    width: 30%;
+  }
+  .right-side {
+    width: 70%;
+    text-align: right;
+  }
+  .button {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .button:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="left-side">
+    <img src="nb.png" alt="Company Logo" width="100%">
+  </div>
+  <div class="right-side">
+    <a href="https://www.baidu.com" class="button">软件列表</a>
+    <button class="button" onclick="openFeedback()">Bug反馈</button>
+  </div>
+</div>
+
+<script>
+function openFeedback() {
+  var contactMethod = prompt("请选择联系方式:", "QQ 或 Email");
+  if (contactMethod === "QQ") {
+    window.open("mqqwpa://im/chat?chat_type=wpa&uin=663918672", '_blank');
+  } else if (contactMethod === "Email") {
+    window.location.href = 'mailto:yi15980880410@163.com';
+  } else {
+    alert("请输入有效的联系方式！");
+  }
+}
+</script>
+
+</body>
+</html>
